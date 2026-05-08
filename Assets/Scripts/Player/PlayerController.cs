@@ -34,6 +34,9 @@ namespace NextDay.Player
         [Tooltip("Thời gian cooldown giữa các đòn tấn công (giây)")]
         [SerializeField] private float _attackCooldown = 0.5f;
 
+        [Tooltip("Layer chứa kẻ thù (để attack chỉ target enemy)")]
+        [SerializeField] private LayerMask _enemyLayer;
+
         [Header("Event Channels")]
         [Tooltip("Channel phát event game state")]
         [SerializeField] private GameEventChannel _gameEventChannel;
@@ -132,7 +135,8 @@ namespace NextDay.Player
             // Tìm kẻ thù trong phạm vi tấn công
             Collider2D[] hits = Physics2D.OverlapCircleAll(
                 transform.position,
-                _attackRange
+                _attackRange,
+                _enemyLayer
             );
 
             foreach (Collider2D hit in hits)

@@ -58,6 +58,13 @@ namespace NextDay.Defense
         [Tooltip("Channel lắng nghe event game state")]
         [SerializeField] private GameEventChannel _gameEventChannel;
 
+        [Header("Layer Masks")]
+        [Tooltip("Layer chứa player (để truyền cho EnemyAI)")]
+        [SerializeField] private LayerMask _playerLayer;
+
+        [Tooltip("Layer chứa buildings (để truyền cho EnemyAI)")]
+        [SerializeField] private LayerMask _buildingLayer;
+
         private int _currentWaveIndex;
         private int _totalEnemiesSpawned;
         private int _totalEnemiesAlive;
@@ -229,7 +236,7 @@ namespace NextDay.Defense
             // Khởi tạo AI
             if (enemy.TryGetComponent(out EnemyAI ai))
             {
-                ai.Initialize(config, _defenseEventChannel);
+                ai.Initialize(config, _defenseEventChannel, _playerLayer, _buildingLayer);
             }
 
             _activeEnemies.Add(enemy);

@@ -80,7 +80,8 @@ namespace NextDay.Building
             if (_isBuildMode)
             {
                 Debug.Log("[BuildingSystem] Chế độ xây dựng BẬT.");
-                if (_selectedBuildingIndex >= 0 && _selectedBuildingIndex < _availableBuildings.Length)
+                if (_selectedBuildingIndex >= 0 && _selectedBuildingIndex < _availableBuildings.Length
+                    && _buildingPreview != null)
                 {
                     _buildingPreview.ShowPreview(_availableBuildings[_selectedBuildingIndex]);
                 }
@@ -88,7 +89,10 @@ namespace NextDay.Building
             else
             {
                 Debug.Log("[BuildingSystem] Chế độ xây dựng TẮT.");
-                _buildingPreview.HidePreview();
+                if (_buildingPreview != null)
+                {
+                    _buildingPreview.HidePreview();
+                }
                 _selectedBuildingIndex = -1;
             }
         }
@@ -298,7 +302,10 @@ namespace NextDay.Building
             if (_isBuildMode)
             {
                 _isBuildMode = false;
-                _buildingPreview.HidePreview();
+                if (_buildingPreview != null)
+                {
+                    _buildingPreview.HidePreview();
+                }
                 Debug.Log("[BuildingSystem] Đêm bắt đầu — tắt chế độ xây dựng!");
             }
         }

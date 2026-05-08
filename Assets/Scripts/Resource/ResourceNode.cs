@@ -125,15 +125,10 @@ namespace NextDay.Resource
 
             if (amount > 0)
             {
-                // Thêm vào inventory của player
+                // Thêm vào inventory của player (AddItem đã publish event qua ResourceEventChannel)
                 if (inventory != null)
                 {
                     inventory.AddItem(_resourceDataSO.ResourceType, amount);
-                }
-
-                if (_resourceEventChannel != null)
-                {
-                    _resourceEventChannel.RaiseResourceCollected(_resourceDataSO.ResourceType, amount);
                 }
             }
         }

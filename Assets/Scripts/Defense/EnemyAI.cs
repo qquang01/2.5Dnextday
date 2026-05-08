@@ -121,10 +121,13 @@ namespace NextDay.Defense
         /// <summary>
         /// Khởi tạo enemy với config — gọi sau khi spawn.
         /// </summary>
-        public void Initialize(EnemyConfigSO config, DefenseEventChannel defenseChannel)
+        public void Initialize(EnemyConfigSO config, DefenseEventChannel defenseChannel,
+            LayerMask playerLayer = default, LayerMask buildingLayer = default)
         {
             _enemyConfigSO = config;
             _defenseEventChannel = defenseChannel;
+            _playerLayer = playerLayer;
+            _buildingLayer = buildingLayer;
 
             if (_healthComponent != null && config != null)
             {
