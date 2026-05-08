@@ -1,5 +1,6 @@
 using UnityEngine;
 using NextDay.Events;
+using NextDay.Player;
 
 namespace NextDay.Resource
 {
@@ -106,11 +107,34 @@ namespace NextDay.Resource
                 return;
             }
 
+            // Kiểm tra inventory trước khi harvest
+            Inventory inventory = null;
+            if (interactor != null)
+            {
+                interactor.TryGetComponent(out inventory);
+            }
+
+            if (inventory != null && !inventory.HasFreeSlot
+                && inventory.GetItemCount(_resourceDataSO.ResourceType) == 0)
+            {
+                Debug.LogWarning("[ResourceNode] Inventory đầy, không thể thu thập.");
+                return;
+            }
+
             int amount = Harvest();
 
-            if (amount > 0 && _resourceEventChannel != null)
+            if (amount > 0)
             {
-                _resourceEventChannel.RaiseResourceCollected(_resourceDataSO.ResourceType, amount);
+                // Thêm vào inventory của player
+                if (inventory != null)
+                {
+                    inventory.AddItem(_resourceDataSO.ResourceType, amount);
+                }
+
+                if (_resourceEventChannel != null)
+                {
+                    _resourceEventChannel.RaiseResourceCollected(_resourceDataSO.ResourceType, amount);
+                }
             }
         }
 

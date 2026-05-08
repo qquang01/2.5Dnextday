@@ -79,6 +79,17 @@ namespace NextDay.Resource
 
             _lastCollectTime = Time.time;
 
+            // Kiểm tra inventory có chỗ trước khi harvest
+            if (_playerInventory != null)
+            {
+                ResourceType type = nearestNode.ResourceData.ResourceType;
+                if (!_playerInventory.HasFreeSlot && _playerInventory.GetItemCount(type) == 0)
+                {
+                    Debug.LogWarning("[ResourceCollector] Inventory đầy, không thể thu thập.");
+                    return false;
+                }
+            }
+
             int amount = nearestNode.Harvest();
 
             if (amount <= 0)
@@ -90,13 +101,7 @@ namespace NextDay.Resource
             if (_playerInventory != null)
             {
                 ResourceType type = nearestNode.ResourceData.ResourceType;
-                bool added = _playerInventory.AddItem(type, amount);
-
-                if (!added)
-                {
-                    Debug.LogWarning("[ResourceCollector] Inventory đầy, không thể thu thập.");
-                    return false;
-                }
+                _playerInventory.AddItem(type, amount);
             }
 
             return true;

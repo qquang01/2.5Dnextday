@@ -277,6 +277,9 @@ namespace NextDay.Building
                     sr.sprite = buildingData.BuildingSprite;
                 }
 
+                BuildingIdentifier identifier = building.AddComponent<BuildingIdentifier>();
+                identifier.Initialize(buildingData.BuildingType);
+
                 BoxCollider2D collider = building.AddComponent<BoxCollider2D>();
                 collider.size = new Vector2(
                     buildingData.GridSize.x,

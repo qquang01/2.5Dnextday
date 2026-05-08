@@ -1,5 +1,6 @@
 using UnityEngine;
 using NextDay.Events;
+using NextDay.Building;
 
 namespace NextDay.Defense
 {
@@ -10,6 +11,7 @@ namespace NextDay.Defense
     {
         Idle,
         ChasePlayer,
+        ChaseBuilding,
         AttackPlayer,
         AttackBuilding,
         Dead
@@ -180,7 +182,7 @@ namespace NextDay.Defense
 
                 _currentState = distance <= attackRange
                     ? EnemyState.AttackBuilding
-                    : EnemyState.ChasePlayer;
+                    : EnemyState.ChaseBuilding;
             }
             else
             {
@@ -201,6 +203,7 @@ namespace NextDay.Defense
                     break;
 
                 case EnemyState.ChasePlayer:
+                case EnemyState.ChaseBuilding:
                     ChaseTarget();
                     break;
 
@@ -252,7 +255,12 @@ namespace NextDay.Defense
             // Nếu tấn công building → publish event
             if (_currentState == EnemyState.AttackBuilding && _defenseEventChannel != null)
             {
-                _defenseEventChannel.RaiseBuildingDamaged(BuildingType.Wall, _enemyConfigSO.Damage);
+                BuildingType targetBuildingType = BuildingType.Wall;
+                if (_target.TryGetComponent(out BuildingIdentifier identifier))
+                {
+                    targetBuildingType = identifier.BuildingType;
+                }
+                _defenseEventChannel.RaiseBuildingDamaged(targetBuildingType, _enemyConfigSO.Damage);
             }
 
             Debug.Log($"[EnemyAI] {_enemyConfigSO.DisplayName} tấn công {_target.name}!");
