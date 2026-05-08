@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using NextDay.Defense;
 using NextDay.Events;
 using NextDay.Player;
 
@@ -186,6 +187,13 @@ namespace NextDay.Building
             _placedBuildings.Remove(building);
             Vector3 position = building.transform.position;
 
+            if (_buildingEventChannel != null)
+            {
+                BuildingIdentifier identifier = building.GetComponent<BuildingIdentifier>();
+                BuildingType type = identifier != null ? identifier.BuildingType : BuildingType.Wall;
+                _buildingEventChannel.RaiseBuildingRemoved(type, position);
+            }
+
             // TODO: Hoàn trả một phần tài nguyên nếu cần
 
             Destroy(building);
@@ -289,6 +297,9 @@ namespace NextDay.Building
                     buildingData.GridSize.x,
                     buildingData.GridSize.y
                 );
+
+                HealthComponent health = building.AddComponent<HealthComponent>();
+                health.Initialize(buildingData.MaxHealth, buildingData.DefenseValue);
             }
 
             return building;
